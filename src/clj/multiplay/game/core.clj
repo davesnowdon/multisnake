@@ -144,8 +144,8 @@
 (defmethod handle-command :player/leave
   [game-state [command id]]
 
-  (assoc game-state :players
-         (vec (remove #(= (:id %) id) (:players game-state)))))
+  (assoc game-state :snakes
+         (vec (remove #(= (:id %) id) (:snakes game-state)))))
 
 (defmethod handle-command :player/join
   [game-state [command id name]]
