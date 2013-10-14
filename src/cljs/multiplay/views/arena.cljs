@@ -11,6 +11,25 @@
 
 ;;; TODO - complete you client side rendering game play here!!
 
+(def size 15)
+
+(defn rect [ctx [x y] [r g b]]
+  (set! (.-fillStyle ctx) (str "rgb(" r "," g "," b ")"))
+  (.fillRect ctx (* size x) (* size y) size size))
+
+(defn draw-snakes [ctx snakes]
+  (doseq [snake snakes
+          cell (:body snake)]
+    (rect ctx cell (:color snake))))
+
+(defn draw-apples [ctx apples]
+  (doseq [apple apples]
+    (rect ctx apple [255 0 0])))
+
+(defn draw-walls [ctx walls]
+  (doseq [wall walls]
+    (rect ctx wall [0 0 0])))
+
 (defn draw-players 
   [context {:keys [players]}]
   (set! (.-font context) "12px Arial")
@@ -28,7 +47,9 @@
         h (.-height canvas)]
     (doto context
       (.clearRect 0 0 w h)
-      (draw-players game-state))))
+      (draw-snakes (:snakes game-state))
+      (draw-apples (:apples game-state))
+      (draw-walls (:walls game-state)))))
 
 (defn create!
   []

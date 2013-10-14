@@ -21,7 +21,9 @@
   [e]
   (let [code (.-keyCode e)]
     (case code
+      37 :left
       38 :up
+      39 :right
       40 :down
       87 :up
       83 :down
@@ -34,6 +36,8 @@
         (case @key-down
           :up   (>! command-chan [:player/up])
           :down (>! command-chan [:player/down])
+          :left (>! command-chan [:player/left])
+          :right (>! command-chan [:player/right])
           :not-matched)))
   (.addEventListener js/window "keydown"
                      (fn [e]

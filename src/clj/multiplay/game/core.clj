@@ -2,7 +2,7 @@
   (:require [multiplay.game.params :as params]
             [clojure.set :refer [difference]]))
 
-(def field-width 40)
+(def field-width 30)
 (def field-height 30)
 (def number-of-apples 5)
 
@@ -10,7 +10,8 @@
 (def initial-game-state
    {:apples #{}
     :snakes []
-    :walls #{[20 20] [30 30]}})
+    :walls #{[20 20] [22 22]
+             }})
 
 (def dirs {:right [1 0]
            :left [-1 0]
@@ -92,19 +93,11 @@
   (if-let [idx (find-snake-idx id)]
     (assoc-in world [:snakes (find-snake-idx id) :dir] dir)))
 
-
-(defn move-up
-  [snake]
-    (assoc snake :dir :up))
-
-(defn move-down
-  [snake]
-    (assoc snake :dir :down))
-
-(defn update-player [player-to-update action {:keys [snakes]}]
+(defn update-player [player-to-update dir {:keys [snakes]}]
+  (println "Update!")
   (map (fn [{:keys [id] :as snake}]
     (if (= id player-to-update)
-      (action snake)
+      (assoc snake :dir dir)
       snake)) snakes))
 
 
@@ -129,11 +122,19 @@
 
 (defmethod handle-command :player/up
   [game-state [command id]]
-  (assoc game-state :players (update-player id move-up game-state)))
+  (assoc game-state :snakes (update-player id :up game-state)))
 
 (defmethod handle-command :player/down
   [game-state [command id]]
-  (assoc game-state :players (update-player id move-down game-state)))
+  (assoc game-state :snakes (update-player id :down game-state)))
+
+(defmethod handle-command :player/left
+  [game-state [command id]]
+  (assoc game-state :snakes (update-player id :left game-state)))
+
+(defmethod handle-command :player/right
+  [game-state [command id]]
+  (assoc game-state :snakes (update-player id :right game-state)))
 
 (defn- handle-commands
   [game-state commands]
