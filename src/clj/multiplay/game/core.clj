@@ -6,19 +6,50 @@
 (def field-height 30)
 (def number-of-apples 5)
 
+(def D [[0 0]
+        [1 0]
+        [2 1]
+        [2 2]
+        [2 3]
+        [1 4]
+        [0 4]
+        [0 3]
+        [0 2]
+        [0 1]])
+
+(def O [[1 0]
+        [2 1]
+        [2 2]
+        [2 3]
+        [1 4]
+        [0 3]
+        [0 2]
+        [0 1]])
+
+(def J [[2 0]
+        [2 1]
+        [2 2]
+        [2 3]
+        [1 4]
+        [0 3]])
+
+(defn shift [letter dx dy]
+  (map #(map + % [dx dy]) letter))
 
 (def initial-game-state
    {:apples #{}
     :snakes []
-    :walls #{[20 20] [22 22]
-             }})
+    :walls (set (concat (shift D 10 10)
+                        (shift O 15 10)
+                        (shift J 20 10)
+                        (shift O 25 10)))})
 
 (def dirs {:right [1 0]
            :left [-1 0]
            :up [0 -1]
            :down [0 1]})
 
-(defn random-color
+ (defn random-color
   ([]
      (->> #(+ 127 (rand-int 127))
           (repeatedly 3)
